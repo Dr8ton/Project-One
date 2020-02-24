@@ -35,15 +35,18 @@
       <ul class="todo-list">
         <li v-for="todo in filteredTodos" class="todo" :key="todo.id"
           :class="{completed: todo.completed, editing: todo == editedTodo }">
-          <div class="view">
+          <div class="view" @dblclick="editTodo(todo)">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
-            <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-            <label @dblclick="editDateDue(todo)">{{ todo.dateDue | formatDate }}</label>
+            <label>{{ todo.title }}</label>
+            <label>{{ todo.dateDue | formatDate }}</label>
             <button class="destroy" @click="removeTodo(todo)"></button>
           </div>
-          
-          <input class="edit" type="text" v-model="todo.title" v-todo-focus="todo == editedTodo" @blur="doneEdit(todo)"
-            @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" />
+
+          <div class="edit" v-todo-focus="todo == editedTodo" @submit="doneEdit(todo)"
+            @keyup.esc="cancelEdit(todo)">
+            <input type="text" v-model="todo.title" required/>
+            <input type="date" v-model="todo.dateDue" required/>
+        </div>
         </li>
       </ul>
     </section>
@@ -130,6 +133,7 @@
         todos: todoStorage.fetch(),
         newTodo: "",
         editedTodo: null,
+        editedDate: "",
         dateDue: "",
         visibility: "all"
       },
@@ -166,14 +170,14 @@
       },
 
       filters: {
-        
+
         pluralize: function (n) {
           return n === 1 ? "item" : "items";
         },
 
         formatDate: function (value) {
           if (value) {
-            return moment(String(value)).format('MM/DD/YYYY')
+            return moment(String(value)).format('D MMM YYYY')
           }
         }
       },
@@ -190,8 +194,11 @@
             id: todoStorage.uid++,
             title: value,
             completed: false,
-            dateDue: new Date(this.dateDue)
+            //dateDue: new Date(this.dateDue),
+            dateDue: moment(this.dateDue).format("YYYY-M-D")
+
           });
+          
           this.newTodo = "";
           this.dateDue = "";
 
@@ -201,17 +208,21 @@
           this.todos.splice(this.todos.indexOf(todo), 1);
         },
 
+        //TODO: Start here work on these. the logig needs to be in the edit. 
         editTodo: function (todo) {
           this.beforeEditCache = todo.title;
           this.editedTodo = todo;
+
         },
 
         doneEdit: function (todo) {
           if (!this.editedTodo) {
             return;
           }
-          this.editedTodo = null;
+   
           todo.title = todo.title.trim();
+          todo.dateDue = this.dateDue; 
+                 this.editedTodo = null;
           if (!todo.title) {
             this.removeTodo(todo);
           }
