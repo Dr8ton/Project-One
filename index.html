@@ -17,10 +17,10 @@
     <header class="header">
       <h1>todos</h1>
       
-      <form id=todoForm>
-        <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo"/>
-        <input type="date" class="new-todo" autofocus autocomplete="off" v-model="dateDue" />
-        <button type='button' class='btn' v-on:click="addTodo">Add To List </button> 
+      <form id=todoForm @submit.prevent="addTodo">
+        <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo" required/>
+        <input type="date" class="new-todo" autofocus autocomplete="off" v-model="dateDue" required />
+        <button type="submit" style="float: right">Submit</button>
       </form>
 
     </header>
@@ -32,7 +32,7 @@
       
       <ul class="todo-list">
         <li v-for="todo in filteredTodos" class="todo" :key="todo.id"
-          :class="{ pastDue: todo.late, completed: todo.completed, editing: todo == editedTodo }">
+          :class="{completed: todo.completed, editing: todo == editedTodo }">
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }} | {{ todo.dateDue }}</label>
@@ -113,7 +113,7 @@
       },
       pastDue: function (todos) {
         return todos.filter(function (todo) {
-          return todo.dateDue.valueOf() < Date.now();
+          return todo.dateDue.valueOf() < Date.now() && !todo.completed;
         });
       }
       //TODO add filter for past due tasks; 
@@ -127,7 +127,6 @@
         newTodo: "",
         editedTodo: null,
         dateDue: "",
-        isPastDue: false,
         visibility: "all"
       },
 
@@ -183,6 +182,8 @@
             dateDue: new Date(this.dateDue)
           });
           this.newTodo = "";
+          this.dateDue= "";
+
         },
 
         removeTodo: function (todo) {
