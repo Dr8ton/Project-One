@@ -38,9 +38,10 @@
           <div class="view">
             <input class="toggle" type="checkbox" v-model="todo.completed" />
             <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-            <label @dblclick="editDateDue(todo)">{{ todo.dateDue }}</label>
+            <label @dblclick="editDateDue(todo)">{{ todo.dateDue | formatDate }}</label>
             <button class="destroy" @click="removeTodo(todo)"></button>
           </div>
+          
           <input class="edit" type="text" v-model="todo.title" v-todo-focus="todo == editedTodo" @blur="doneEdit(todo)"
             @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" />
         </li>
@@ -172,7 +173,7 @@
 
         formatDate: function (value) {
           if (value) {
-            return moment(String(value)).format('MM/DD/YYYY hh:mm')
+            return moment(String(value)).format('MM/DD/YYYY')
           }
         }
       },
