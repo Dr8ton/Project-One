@@ -22,8 +22,8 @@
           <input class="new-todo" autofocus autocomplete="off" placeholder="What needs to be done?" v-model="newTodo"
             required />
           <input type="date" class="new-todo" autofocus autocomplete="off" v-model="dateDue" required />
-          <button type="submit" style="float: right">Submit</button>
-        </form>
+          <button type="submit" style="font-size:medium;width:100%;background-color:gray;float: right">Submit</button>
+        </form><br>
 
       </header>
 
@@ -37,8 +37,8 @@
             :class="{completed: todo.completed, editing: todo == editedTodo }">
             <div class="view" @dblclick="editTodo(todo)">
               <input class="toggle" type="checkbox" v-model="todo.completed" />
-              <label>{{ todo.title }}</label>
-              <label>{{ todo.dateDue | formatDate }}</label>
+              <label>{{ todo.title }} <span style="margin-right:50px;float:right;font-size:small;">Due by: {{ todo.dateDue | formatDate }}</span> </label>
+              
               <button class="destroy" @click="removeTodo(todo)"></button>
             </div>
 
@@ -194,7 +194,7 @@
             title: value,
             completed: false,
             //dateDue: new Date(this.dateDue),
-            dateDue: moment(this.dateDue).format("YYYY-MM-DD")
+            dateDue: moment(this.dateDue).format("YYYY-MM-D")
 
           });
 
