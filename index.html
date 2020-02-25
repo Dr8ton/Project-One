@@ -44,7 +44,7 @@
 
             <div class="edit" v-todo-focus="todo == editedTodo" @submit="doneEdit(todo)" @keyup.esc="cancelEdit(todo)">
               <input type="text" v-model="todo.title" required />
-              <input type="date" v-model="todo.dateDue" required />
+              <input type="date" value="todo.dateDue" v-model="todo.dateDue" required />
             </div>
           </li>
         </ul>
@@ -194,7 +194,7 @@
             title: value,
             completed: false,
             //dateDue: new Date(this.dateDue),
-            dateDue: moment(this.dateDue).format("YYYY-M-D")
+            dateDue: moment(this.dateDue).format("YYYY-MM-DD")
 
           });
 
