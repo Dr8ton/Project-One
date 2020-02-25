@@ -11,7 +11,5 @@
   "devDependencies": {
     "serve": "^11.2.0"
   },
-  "dependencies": {
-    "moment": "^2.24.0"
-  }
+  "dependencies": {}
 }
